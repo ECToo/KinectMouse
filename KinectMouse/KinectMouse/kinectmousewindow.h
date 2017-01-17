@@ -1,12 +1,18 @@
 #ifndef KINECTMOUSEWINDOW_H
 #define KINECTMOUSEWINDOW_H
 
+#include <vector>
+#include <memory>
+
 #include <QtWidgets/QMainWindow>
 #include <QPainter>
 #include "ui_kinectmousewindow.h"
-#include "Pointer.h"
 
 #include <boost/circular_buffer.hpp>
+
+#include "Pointer.h"
+#include "KinectPointer.h"
+#include "SimpleFilter.h"
 
 class KinectMouseWindow : public QMainWindow
 {
@@ -27,7 +33,11 @@ private:
     Ui::KinectMouseWindowClass ui;
     QPixmap m_desktop;
     boost::circular_buffer<QPoint> m_points;
-    Pointer pointer;
+    std::unique_ptr<KinectPointer> pointer;
+
+    std::vector<std::unique_ptr<BaseFilter>> m_filters;
+
+
 };
 
 #endif // KINECTMOUSEWINDOW_H

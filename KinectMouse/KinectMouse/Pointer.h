@@ -10,7 +10,7 @@ public:
     Pointer();
     virtual ~Pointer();
 
-    Q_SLOT void nextPosition();
+    Q_SLOT void requestNextPosition();
 
     Q_SIGNAL void newPosition(QPoint p);
 };

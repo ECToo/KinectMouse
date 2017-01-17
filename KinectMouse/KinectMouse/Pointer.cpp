@@ -11,7 +11,7 @@ Pointer::~Pointer()
 {
 }
 
-void Pointer::nextPosition()
+void Pointer::requestNextPosition()
 {
     POINT p;
     GetCursorPos(&p);
