@@ -6,6 +6,9 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QPainter>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QChartView>
+
 #include "ui_kinectmousewindow.h"
 
 #include <boost/circular_buffer.hpp>
@@ -27,6 +30,8 @@ public:
 
     Q_SLOT void pointerMove(QPoint p);
 
+    Q_SLOT void trackZvalue(float z);
+
     Q_SIGNAL void requestNextPosition();
 
 private:
@@ -37,7 +42,9 @@ private:
 
     std::vector<std::unique_ptr<BaseFilter>> m_filters;
 
-
+    QtCharts::QLineSeries* m_zSeries;
+    int m_zTime;
+    QtCharts::QChart* m_zChart;
 };
 
 #endif // KINECTMOUSEWINDOW_H

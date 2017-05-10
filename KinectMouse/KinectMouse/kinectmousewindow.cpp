@@ -4,7 +4,7 @@
 #include <QPainter>
 
 KinectMouseWindow::KinectMouseWindow(QWidget *parent)
-    : QMainWindow(parent),m_desktop(),m_points(250), pointer(nullptr)
+    : QMainWindow(parent),m_desktop(),m_points(250), pointer(nullptr), m_zTime(0)
 {
     ui.setupUi(this);
     adjustSize();
@@ -23,10 +23,19 @@ KinectMouseWindow::KinectMouseWindow(QWidget *parent)
     m_desktop = std::move(pm);
 
     connect(pointer.get(), SIGNAL(newPosition(QPoint)), this, SLOT(pointerMove(QPoint)));
+    connect(pointer.get(), SIGNAL(newZPos(float)), this, SLOT(trackZvalue(float)));
     connect(this, SIGNAL(requestNextPosition()), pointer.get(), SLOT(requestNextPosition()), Qt::QueuedConnection);
+
 
     connect(ui.pbStart, SIGNAL(clicked(bool)), this, SLOT(startTracking(bool)));
     connect(ui.sbHistory, SIGNAL(valueChanged(int)), this, SLOT(setHistory(int)));
+
+    m_zSeries = new QtCharts::QLineSeries();
+
+    m_zChart = new QtCharts::QChart();
+    QtCharts::QChartView *chartView = new QtCharts::QChartView(m_zChart);
+    ui.groupBox->layout()->addWidget(chartView);
+
 
     // set up filters
     m_filters.push_back(std::make_unique<BaseFilter>());
@@ -57,6 +66,15 @@ Q_SLOT void KinectMouseWindow::startTracking(bool checked)
 Q_SLOT void KinectMouseWindow::setHistory(int maxHistory)
 {
     m_points.set_capacity(maxHistory);
+}
+
+Q_SLOT void KinectMouseWindow::trackZvalue(float z)
+{
+    //if (m_zSeries->points().size() == 20)
+    //    m_zSeries->remove(0);
+    m_zSeries->append(QPointF((float)m_zTime++,z));
+    m_zChart->removeSeries(m_zSeries);
+    m_zChart->addSeries(m_zSeries);
 }
 
 Q_SLOT void KinectMouseWindow::pointerMove(QPoint p)
