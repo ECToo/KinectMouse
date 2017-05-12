@@ -43,8 +43,11 @@ private:
     std::vector<std::unique_ptr<BaseFilter>> m_filters;
 
     QtCharts::QLineSeries* m_zSeries;
+    QtCharts::QLineSeries* m_zdSeries;
     int m_zTime;
+    int lastDepth;
     QtCharts::QChart* m_zChart;
+    QtCharts::QChart* m_zdChart;
 };
 
 #endif // KINECTMOUSEWINDOW_H
