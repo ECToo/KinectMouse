@@ -45,7 +45,8 @@ private:
     QtCharts::QLineSeries* m_zSeries;
     QtCharts::QLineSeries* m_zdSeries;
     int m_zTime;
-    int lastDepth;
+    float lastDepth;
+    float maxDepth;
     QtCharts::QChart* m_zChart;
     QtCharts::QChart* m_zdChart;
 };

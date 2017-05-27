@@ -21,12 +21,22 @@ public:
     Q_SIGNAL void newPosition(QPoint p);
     Q_SIGNAL void newZPos(float z);
 
+    Q_SIGNAL void mousePressed(QPoint p);
+    Q_SIGNAL void mouseReleased(QPoint p);
+
+    void setMouseClickThreshold(float th)
+    {
+        m_clickThreshold = th;
+    }
+
     KinectPointer(unsigned width, unsigned height);
     virtual ~KinectPointer();
 
 private:
 
-    std::tuple<QPoint, USHORT> skeletonPosToScreenPos(const Vector4& pos);
+    std::tuple<QPoint, float> skeletonPosToScreenPos(const Vector4& pos);
+
+    void checkMousePressed(QPoint current, float Z);
 
     Q_SLOT void processNextFrame();
 
@@ -35,5 +45,6 @@ private:
     QWinEventNotifier m_QNextFrameEvent;
 
     float m_x_scale, m_y_scale;
+    float m_clickThreshold;
 };
 

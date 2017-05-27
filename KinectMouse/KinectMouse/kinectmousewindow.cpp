@@ -4,7 +4,7 @@
 #include <QPainter>
 
 KinectMouseWindow::KinectMouseWindow(QWidget *parent)
-    : QMainWindow(parent),m_desktop(),m_points(250), pointer(nullptr), m_zTime(0), lastDepth(0)
+    : QMainWindow(parent),m_desktop(),m_points(250), pointer(nullptr), m_zTime(0), lastDepth(0.f), maxDepth(0.f)
 {
     ui.setupUi(this);
     adjustSize();
@@ -85,9 +85,20 @@ Q_SLOT void KinectMouseWindow::trackZvalue(float z)
     m_zdChart->removeSeries(m_zdSeries);
     m_zdChart->addSeries(m_zdSeries);
 
+    maxDepth = std::max(maxDepth, z);
+
     m_zSeries->append(QPointF((float)m_zTime++,z));
     m_zChart->removeSeries(m_zSeries);
     m_zChart->addSeries(m_zSeries);
+
+
+    /*m_zChart->createDefaultAxes();
+    m_zChart->axisX()->setMin(0.f);
+    m_zChart->axisY()->setMax(1.f);
+
+    m_zdChart->createDefaultAxes();
+    m_zdChart->axisX()->setMin(0.f);
+    m_zdChart->axisY()->setMax(1.f);*/
 }
 
 Q_SLOT void KinectMouseWindow::pointerMove(QPoint p)
