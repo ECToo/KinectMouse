@@ -2,18 +2,17 @@
 
 #include <QDesktopWidget>
 #include <QPainter>
+#include <QScreen>
 
 KinectMouseWindow::KinectMouseWindow(QWidget *parent)
     : QMainWindow(parent),m_desktop(),m_points(250), pointer(nullptr), m_zTime(0), lastDepth(0.f), maxDepth(0.f)
 {
     ui.setupUi(this);
     adjustSize();
-    QDesktopWidget* w = QApplication::desktop();
-    QPixmap pm(w->screenGeometry().size());
-    pm = QPixmap::grabWindow(w->screen()->winId());
-    //pm.toImage().save("output.png");
-
-    auto pmSize = w->screenGeometry().size();
+    QScreen* w = QGuiApplication::primaryScreen();
+    QPixmap pm = w->grabWindow(0);
+    
+    auto pmSize = pm.size();
     pointer = std::make_unique<KinectPointer>(pmSize.width(), pmSize.height());
     pmSize.scale(960,540, Qt::KeepAspectRatio);
 
@@ -25,6 +24,8 @@ KinectMouseWindow::KinectMouseWindow(QWidget *parent)
     connect(pointer.get(), SIGNAL(newPosition(QPoint)), this, SLOT(pointerMove(QPoint)));
     connect(pointer.get(), SIGNAL(newZPos(float)), this, SLOT(trackZvalue(float)));
     connect(this, SIGNAL(requestNextPosition()), pointer.get(), SLOT(requestNextPosition()), Qt::QueuedConnection);
+    connect(ui.spClickThreshold, SIGNAL(valueChanged(double)), pointer.get(), SLOT(setMouseClickThreshold(double)));
+    pointer->setMouseClickThreshold(ui.spClickThreshold->value());
 
 
     connect(ui.pbStart, SIGNAL(clicked(bool)), this, SLOT(startTracking(bool)));

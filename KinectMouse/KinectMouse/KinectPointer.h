@@ -24,9 +24,9 @@ public:
     Q_SIGNAL void mousePressed(QPoint p);
     Q_SIGNAL void mouseReleased(QPoint p);
 
-    void setMouseClickThreshold(float th)
+    Q_SLOT void setMouseClickThreshold(double th)
     {
-        m_clickThreshold = th;
+        m_clickThreshold = static_cast<float>(th);
     }
 
     KinectPointer(unsigned width, unsigned height);
