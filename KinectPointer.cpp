@@ -6,6 +6,8 @@
 
 #include <algorithm>
 
+#include <KinectInteraction.h>
+
 KinectPointer::KinectPointer(unsigned width, unsigned height):
     m_sensor(nullptr),
     m_nextFrameRequested(),
@@ -79,11 +81,12 @@ void KinectPointer::processNextFrame()
     {
         _com_error er(hr);
         LPCTSTR errMsg = er.ErrorMessage();
-        qDebug() << "Could not get next frame " << QString::fromWCharArray(errMsg) << " " << hr;
+        qDebug() << "Could not get next frame " << errMsg << " " << hr;
         return;
     }
 
     /// smooth
+
     //////////////
     m_sensor->NuiTransformSmooth(&skeleton_frame, NULL);
     //////////////
